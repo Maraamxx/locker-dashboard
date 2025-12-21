@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+* {
+  font-family: "Work Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.font-space-mono {
+  font-family: "Space Mono", monospace;
+}
+
+body {
+  background-color: rgb(249 250 251);
+}
+
+/* Custom vibrant blue-purple gradient color */
+.focus-ring-green:focus {
+  --tw-ring-color: #6366F1;
+  border-color: #6366F1;
+}
+
+.hover-border-green:hover {
+  border-color: #6366F1;
+}
