@@ -8,15 +8,15 @@ datasource db {
 }
 
 model Branch {
-  // Use dbgenerated to tell Postgres to run the gen_random_uuid() function
-  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id      String   @id @default(dbgenerated("gen_random_uuid()"))
   name    String
   lockers Locker[]
+  users   User[]
 }
 
 model Locker {
-  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  branchId  String @db.Uuid // Must match the type of Branch.id
+  id        String @id @default(dbgenerated("gen_random_uuid()"))
+  branchId  String
   type      String
   number    Int
   masterKey String
@@ -24,8 +24,15 @@ model Locker {
 }
 
 model User {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username String @unique
+  id       String   @id @default(dbgenerated("gen_random_uuid()"))
+  username String   @unique
   password String
-  role     String @default("STAFF")
+  role     UserRole @default(STAFF)
+  branchId String?
+  branch   Branch?  @relation(fields: [branchId], references: [id], onUpdate: NoAction)
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
 }

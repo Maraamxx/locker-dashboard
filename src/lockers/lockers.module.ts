@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LockersController } from './lockers.controller';
 import { LockersService } from './lockers.service';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 
 @Module({
   controllers: [LockersController],
