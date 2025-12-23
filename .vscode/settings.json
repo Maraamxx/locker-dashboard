@@ -1,4 +1,7 @@
 {
   "css.lint.unknownAtRules": "ignore",
-  "css.customData": [".vscode/css-custom-data.json"]
+  "css.customData": [".vscode/css-custom-data.json"],
+  "prisma.pinToPrisma6": true,
+  "prisma-smart-formatter.typescript.defaultFormatter": "esbenp.prettier-vscode",
+  "prisma-smart-formatter.prisma.defaultFormatter": "Prisma.prisma"
 }
