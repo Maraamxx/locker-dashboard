@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000", // your backend
+  baseURL: "https://locker-dashboard-production.up.railway.app", // your backend
 });
 
 // Add token automatically
