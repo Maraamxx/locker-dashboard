@@ -2,34 +2,15 @@ import { useEffect, useState } from "react";
 import api from "../api/api";
 import DashboardLayout from "../layout/DashboardLayout";
 import { useParams, useNavigate } from "react-router-dom";
-import { getCachedData, setCachedData } from "../utils/cache";
 
 export default function LockerDetails() {
   const { lockerId } = useParams();
   const navigate = useNavigate();
   const [locker, setLocker] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    setIsLoading(true);
-
-    // Check cache first
-    const cacheKey = `locker-${lockerId}`;
-    const cachedLocker = getCachedData(cacheKey);
-    if (cachedLocker) {
-      setLocker(cachedLocker);
-      setIsLoading(false);
-      return;
-    }
-
-    api
-      .get(`/lockers/${lockerId}`)
-      .then((res) => {
-        setLocker(res.data);
-        setCachedData(cacheKey, res.data);
-      })
-      .finally(() => setIsLoading(false));
+    api.get(`/lockers/${lockerId}`).then((res) => setLocker(res.data));
   }, [lockerId]);
 
   const copyToClipboard = () => {
@@ -46,7 +27,7 @@ export default function LockerDetails() {
     }
   };
 
-  if (!locker || isLoading) {
+  if (!locker) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center min-h-[400px]">

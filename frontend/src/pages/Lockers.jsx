@@ -3,38 +3,23 @@ import api from "../api/api";
 import DashboardLayout from "../layout/DashboardLayout";
 import { useParams, useNavigate } from "react-router-dom";
 import Pagination from "../components/Pagination";
-import { LockersGridSkeleton } from "../components/SkeletonLoader";
-import { getCachedData, setCachedData } from "../utils/cache";
 
 export default function Lockers() {
   const { branchId } = useParams();
   const navigate = useNavigate();
   const [lockers, setLockers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
   useEffect(() => {
-    setIsLoading(true);
-
-    // Check cache first
-    const cacheKey = `lockers-${branchId}`;
-    const cachedLockers = getCachedData(cacheKey);
-    if (cachedLockers) {
-      setLockers(cachedLockers);
-      setIsLoading(false);
-      return;
-    }
-
-    api
-      .get(`/lockers/branch/${branchId}`)
-      .then((res) => {
-        setLockers(res.data);
-        setCachedData(cacheKey, res.data);
-      })
-      .finally(() => setIsLoading(false));
+    setLoading(true);
+    api.get(`/lockers/branch/${branchId}`).then((res) => {
+      setLockers(res.data);
+      setLoading(false);
+    });
   }, [branchId]);
 
   const uniqueTypes = useMemo(() => {
@@ -177,8 +162,21 @@ export default function Lockers() {
         </div>
 
         {/* Lockers Grid */}
-        {isLoading ? (
-          <LockersGridSkeleton count={20} />
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="p-3 sm:p-4 md:p-5 bg-white rounded-lg sm:rounded-xl shadow-md border border-gray-200 animate-pulse"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="h-6 bg-gray-300 rounded w-10"></div>
+                  <div className="h-2 w-2 rounded-full bg-gray-300"></div>
+                </div>
+                <div className="h-3 bg-gray-300 rounded w-16"></div>
+              </div>
+            ))}
+          </div>
         ) : paginatedLockers.length === 0 ? (
           <div className="text-center py-8 sm:py-12 bg-white rounded-lg shadow-sm border border-gray-200">
             <svg

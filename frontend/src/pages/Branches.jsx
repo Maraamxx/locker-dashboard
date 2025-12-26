@@ -3,35 +3,21 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import DashboardLayout from "../layout/DashboardLayout";
 import Pagination from "../components/Pagination";
-import { BranchesGridSkeleton } from "../components/SkeletonLoader";
-import { getCachedData, setCachedData } from "../utils/cache";
 
 export default function Branches() {
   const navigate = useNavigate();
   const [branches, setBranches] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
   useEffect(() => {
-    setIsLoading(true);
-
-    // Check cache first
-    const cachedBranches = getCachedData("branches");
-    if (cachedBranches) {
-      setBranches(cachedBranches);
-      setIsLoading(false);
-      return;
-    }
-
-    api
-      .get("/branches")
-      .then((res) => {
-        setBranches(res.data);
-        setCachedData("branches", res.data);
-      })
-      .finally(() => setIsLoading(false));
+    setLoading(true);
+    api.get("/branches").then((res) => {
+      setBranches(res.data);
+      setLoading(false);
+    });
   }, []);
 
   const filteredBranches = useMemo(() => {
@@ -92,8 +78,23 @@ export default function Branches() {
         )}
 
         {/* Branches Grid */}
-        {isLoading ? (
-          <BranchesGridSkeleton count={9} />
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            {[...Array(9)].map((_, i) => (
+              <div
+                key={i}
+                className="p-4 sm:p-6 bg-white rounded-xl shadow-md border border-gray-200 animate-pulse"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg bg-gray-300 flex-shrink-0"></div>
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-300 rounded w-24"></div>
+                  </div>
+                </div>
+                <div className="mt-4 h-3 bg-gray-300 rounded w-32"></div>
+              </div>
+            ))}
+          </div>
         ) : paginatedBranches.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow-sm border border-gray-200">
             <svg
