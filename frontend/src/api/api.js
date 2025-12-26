@@ -17,9 +17,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401 || error.response?.status === 403) {
       localStorage.removeItem("token");
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
-      }
+      // Dispatch a custom event instead of navigating directly
+      window.dispatchEvent(new CustomEvent("logout"));
     }
     return Promise.reject(error);
   }

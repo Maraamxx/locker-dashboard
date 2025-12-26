@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -11,13 +13,16 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    
+
     try {
       const res = await api.post("/auth/login", { username, password });
       localStorage.setItem("token", res.data.token);
-      window.location.href = "/";
+      navigate("/", { replace: true });
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || "Invalid username or password";
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Invalid username or password";
       setError(errorMessage);
       console.error("Login error:", err.response?.data || err);
     } finally {
@@ -39,8 +44,12 @@ export default function Login() {
           </div>
         </div>
 
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 text-center">Staff Login</h2>
-        <p className="text-gray-600 text-xs sm:text-sm text-center mb-4 sm:mb-6">Enter your credentials to access the dashboard</p>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 text-center">
+          Staff Login
+        </h2>
+        <p className="text-gray-600 text-xs sm:text-sm text-center mb-4 sm:mb-6">
+          Enter your credentials to access the dashboard
+        </p>
 
         <form onSubmit={handleLogin}>
           <div className="mb-3 sm:mb-4">
@@ -82,15 +91,38 @@ export default function Login() {
             type="submit"
             disabled={loading}
             className="w-full text-white py-2.5 sm:py-3 text-sm sm:text-base rounded-lg hover:bg-gray-800 shadow-md hover:shadow-lg transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }}
-            onMouseEnter={(e) => e.target.style.background = 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)'}
-            onMouseLeave={(e) => e.target.style.background = 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)'}
-            >
+            style={{
+              background: "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+            }}
+            onMouseEnter={(e) =>
+              (e.target.style.background =
+                "linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)")
+            }
+            onMouseLeave={(e) =>
+              (e.target.style.background =
+                "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)")
+            }
+          >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Logging in...
               </span>

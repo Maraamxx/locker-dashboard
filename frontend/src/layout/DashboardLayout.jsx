@@ -26,12 +26,20 @@ export default function DashboardLayout({ children }) {
           <button
             onClick={() => {
               localStorage.removeItem("token");
-              window.location.href = "/login";
+              navigate("/login", { replace: true });
             }}
             className="px-3 py-1.5 md:px-4 md:py-2 text-sm md:text-base rounded-lg text-white shadow-md hover:shadow-lg transition-all duration-200 font-medium"
-            style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }}
-            onMouseEnter={(e) => e.target.style.background = 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)'}
-            onMouseLeave={(e) => e.target.style.background = 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)'}
+            style={{
+              background: "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+            }}
+            onMouseEnter={(e) =>
+              (e.target.style.background =
+                "linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)")
+            }
+            onMouseLeave={(e) =>
+              (e.target.style.background =
+                "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)")
+            }
           >
             Logout
           </button>
