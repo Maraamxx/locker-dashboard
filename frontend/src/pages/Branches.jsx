@@ -1,9 +1,11 @@
 import { useEffect, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import DashboardLayout from "../layout/DashboardLayout";
 import Pagination from "../components/Pagination";
 
 export default function Branches() {
+  const navigate = useNavigate();
   const [branches, setBranches] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);

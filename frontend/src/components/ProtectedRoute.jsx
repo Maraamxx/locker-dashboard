@@ -1,41 +1,16 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import api from "../api/api";
 
 export default function ProtectedRoute({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem("token");
-      
-      if (!token) {
-        setIsAuthenticated(false);
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        // Try to make a request to verify the token
-        // We'll use a lightweight endpoint or create a verify endpoint
-        await api.get("/branches");
-        setIsAuthenticated(true);
-      } catch (error) {
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          localStorage.removeItem("token");
-          setIsAuthenticated(false);
-        } else {
-          // If it's a network error or other issue, assume authenticated
-          // The actual API call will handle the error
-          setIsAuthenticated(true);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
+    // Just check if token exists, don't make an API call
+    // API calls in ProtectedRoute children will handle auth errors
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token);
+    setIsLoading(false);
   }, []);
 
   if (isLoading) {
@@ -55,4 +30,3 @@ export default function ProtectedRoute({ children }) {
 
   return children;
 }
-
