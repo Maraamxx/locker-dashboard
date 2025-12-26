@@ -66,8 +66,12 @@ export default function Lockers() {
             <span className="hidden sm:inline">Back to Branches</span>
             <span className="sm:hidden">Back</span>
           </button>
-          <h2 className="text-2xl sm:text-3xl mb-1 sm:mb-2 font-bold text-gray-800">Lockers</h2>
-          <p className="text-sm sm:text-base text-gray-600">Browse and manage all lockers</p>
+          <h2 className="text-2xl sm:text-3xl mb-1 sm:mb-2 font-bold text-gray-800">
+            Lockers
+          </h2>
+          <p className="text-sm sm:text-base text-gray-600">
+            Browse and manage all lockers
+          </p>
         </div>
 
         {/* Search Bar */}
@@ -107,7 +111,10 @@ export default function Lockers() {
                 }`}
                 style={
                   filterType === "all"
-                    ? { background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }
+                    ? {
+                        background:
+                          "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+                      }
                     : {}
                 }
               >
@@ -124,7 +131,10 @@ export default function Lockers() {
                   }`}
                   style={
                     filterType === type
-                      ? { background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }
+                      ? {
+                          background:
+                            "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+                        }
                       : {}
                   }
                 >
@@ -137,8 +147,10 @@ export default function Lockers() {
 
         {/* Results Count */}
         <div className="mb-3 sm:mb-4 text-xs sm:text-sm text-gray-600">
-          Showing {startIndex + 1}-{Math.min(endIndex, filteredLockers.length)} of {filteredLockers.length} lockers
-          {filteredLockers.length !== lockers.length && ` (${lockers.length} total)`}
+          Showing {startIndex + 1}-{Math.min(endIndex, filteredLockers.length)}{" "}
+          of {filteredLockers.length} lockers
+          {filteredLockers.length !== lockers.length &&
+            ` (${lockers.length} total)`}
         </div>
 
         {/* Lockers Grid */}
@@ -157,7 +169,9 @@ export default function Lockers() {
                 d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
               />
             </svg>
-            <p className="text-gray-500 text-base sm:text-lg">No lockers found</p>
+            <p className="text-gray-500 text-base sm:text-lg">
+              No lockers found
+            </p>
             <p className="text-gray-400 text-xs sm:text-sm mt-1 px-4">
               Try adjusting your search or filter criteria
             </p>
@@ -166,22 +180,24 @@ export default function Lockers() {
           <>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
               {paginatedLockers.map((locker) => (
-              <div
-                key={locker.id}
-                className="p-3 sm:p-4 md:p-5 bg-white rounded-lg sm:rounded-xl shadow-md hover:shadow-xl cursor-pointer transition-all duration-200 border border-gray-200 hover-border-green hover:-translate-y-1 group"
-                onClick={() => (window.location.href = `/locker/${locker.id}`)}
-              >
-                <div className="flex items-center justify-between mb-1 sm:mb-2">
-                  <p className="text-lg sm:text-xl font-bold text-gray-800 transition-colors group-hover:text-[#6366F1] truncate pr-1">
-                    #{locker.number}
+                <div
+                  key={locker.id}
+                  className="p-3 sm:p-4 md:p-5 bg-white rounded-lg sm:rounded-xl shadow-md hover:shadow-xl cursor-pointer transition-all duration-200 border border-gray-200 hover-border-green hover:-translate-y-1 group"
+                  onClick={() => navigate(`/locker/${locker.id}`)}
+                >
+                  <div className="flex items-center justify-between mb-1 sm:mb-2">
+                    <p className="text-lg sm:text-xl font-bold text-gray-800 transition-colors group-hover:text-[#6366F1] truncate pr-1">
+                      #{locker.number}
+                    </p>
+                    <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-green-500 transition-colors group-hover:bg-[#6366F1] flex-shrink-0"></div>
+                  </div>
+                  <p className="text-xs sm:text-sm text-gray-600 font-medium truncate">
+                    {locker.type}
                   </p>
-                  <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-green-500 transition-colors group-hover:bg-[#6366F1] flex-shrink-0"></div>
                 </div>
-                <p className="text-xs sm:text-sm text-gray-600 font-medium truncate">{locker.type}</p>
-              </div>
               ))}
             </div>
-            
+
             {/* Pagination */}
             <Pagination
               currentPage={currentPage}

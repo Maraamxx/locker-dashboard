@@ -32,8 +32,12 @@ export default function Branches() {
   return (
     <DashboardLayout>
       <div className="max-w-6xl mx-auto w-full">
-        <h2 className="text-2xl sm:text-3xl mb-2 font-bold text-gray-800">Select a Branch</h2>
-        <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Choose a branch to view its lockers</p>
+        <h2 className="text-2xl sm:text-3xl mb-2 font-bold text-gray-800">
+          Select a Branch
+        </h2>
+        <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+          Choose a branch to view its lockers
+        </p>
 
         {/* Search Bar */}
         <div className="mb-4 sm:mb-6 relative">
@@ -91,15 +95,41 @@ export default function Branches() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {paginatedBranches.map((b) => (
-              <div
-                key={b.id}
-                onClick={() => (window.location.href = `/branch/${b.id}`)}
-                className="p-4 sm:p-6 bg-white shadow-md hover:shadow-xl rounded-xl cursor-pointer transition-all duration-200 border border-gray-200 hover-border-green hover:-translate-y-1 group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform flex-shrink-0" style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }}>
+                <div
+                  key={b.id}
+                  onClick={() => navigate(`/branch/${b.id}`)}
+                  className="p-4 sm:p-6 bg-white shadow-md hover:shadow-xl rounded-xl cursor-pointer transition-all duration-200 border border-gray-200 hover-border-green hover:-translate-y-1 group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform flex-shrink-0"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+                      }}
+                    >
+                      <svg
+                        className="h-5 w-5 sm:h-6 sm:w-6 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                        />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-800 transition-colors group-hover:text-[#6366F1] truncate">
+                      {b.name}
+                    </h3>
+                  </div>
+                  <div className="mt-3 sm:mt-4 flex items-center text-xs sm:text-sm text-gray-500">
+                    <span>Click to view lockers</span>
                     <svg
-                      className="h-5 w-5 sm:h-6 sm:w-6 text-white"
+                      className="ml-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -108,34 +138,14 @@ export default function Branches() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                        d="M9 5l7 7-7 7"
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800 transition-colors group-hover:text-[#6366F1] truncate">
-                    {b.name}
-                  </h3>
                 </div>
-                <div className="mt-3 sm:mt-4 flex items-center text-xs sm:text-sm text-gray-500">
-                  <span>Click to view lockers</span>
-                  <svg
-                    className="ml-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </div>
-              </div>
               ))}
             </div>
-            
+
             {/* Pagination */}
             <Pagination
               currentPage={currentPage}
