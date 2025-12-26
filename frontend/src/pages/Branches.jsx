@@ -3,16 +3,35 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/api";
 import DashboardLayout from "../layout/DashboardLayout";
 import Pagination from "../components/Pagination";
+import { BranchesGridSkeleton } from "../components/SkeletonLoader";
+import { getCachedData, setCachedData } from "../utils/cache";
 
 export default function Branches() {
   const navigate = useNavigate();
   const [branches, setBranches] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
   useEffect(() => {
-    api.get("/branches").then((res) => setBranches(res.data));
+    setIsLoading(true);
+
+    // Check cache first
+    const cachedBranches = getCachedData("branches");
+    if (cachedBranches) {
+      setBranches(cachedBranches);
+      setIsLoading(false);
+      return;
+    }
+
+    api
+      .get("/branches")
+      .then((res) => {
+        setBranches(res.data);
+        setCachedData("branches", res.data);
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   const filteredBranches = useMemo(() => {
@@ -73,7 +92,9 @@ export default function Branches() {
         )}
 
         {/* Branches Grid */}
-        {paginatedBranches.length === 0 ? (
+        {isLoading ? (
+          <BranchesGridSkeleton count={9} />
+        ) : paginatedBranches.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow-sm border border-gray-200">
             <svg
               className="mx-auto h-12 w-12 text-gray-400 mb-4"

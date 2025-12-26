@@ -2,15 +2,34 @@ import { useEffect, useState } from "react";
 import api from "../api/api";
 import DashboardLayout from "../layout/DashboardLayout";
 import { useParams, useNavigate } from "react-router-dom";
+import { getCachedData, setCachedData } from "../utils/cache";
 
 export default function LockerDetails() {
   const { lockerId } = useParams();
   const navigate = useNavigate();
   const [locker, setLocker] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    api.get(`/lockers/${lockerId}`).then((res) => setLocker(res.data));
+    setIsLoading(true);
+
+    // Check cache first
+    const cacheKey = `locker-${lockerId}`;
+    const cachedLocker = getCachedData(cacheKey);
+    if (cachedLocker) {
+      setLocker(cachedLocker);
+      setIsLoading(false);
+      return;
+    }
+
+    api
+      .get(`/lockers/${lockerId}`)
+      .then((res) => {
+        setLocker(res.data);
+        setCachedData(cacheKey, res.data);
+      })
+      .finally(() => setIsLoading(false));
   }, [lockerId]);
 
   const copyToClipboard = () => {
@@ -27,7 +46,7 @@ export default function LockerDetails() {
     }
   };
 
-  if (!locker) {
+  if (!locker || isLoading) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center min-h-[400px]">
@@ -67,13 +86,27 @@ export default function LockerDetails() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">
             Locker #{locker.number}
           </h2>
-          <p className="text-sm sm:text-base text-gray-600">View locker details and master key</p>
+          <p className="text-sm sm:text-base text-gray-600">
+            View locker details and master key
+          </p>
         </div>
 
         <div className="bg-white rounded-lg sm:rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-          <div className="p-4 sm:p-6 border-b border-gray-200" style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)' }}>
+          <div
+            className="p-4 sm:p-6 border-b border-gray-200"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)",
+            }}
+          >
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-lg flex items-center justify-center shadow-lg flex-shrink-0" style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }}>
+              <div
+                className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-lg flex items-center justify-center shadow-lg flex-shrink-0"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+                }}
+              >
                 <svg
                   className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-white"
                   fill="none"
@@ -92,7 +125,9 @@ export default function LockerDetails() {
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-800">
                   Locker Information
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-600">Complete details</p>
+                <p className="text-xs sm:text-sm text-gray-600">
+                  Complete details
+                </p>
               </div>
             </div>
           </div>
@@ -102,7 +137,13 @@ export default function LockerDetails() {
               <label className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2 block">
                 Type
               </label>
-              <div className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg font-medium text-white shadow-md" style={{ background: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)' }}>
+              <div
+                className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg font-medium text-white shadow-md"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+                }}
+              >
                 {locker.type}
               </div>
             </div>

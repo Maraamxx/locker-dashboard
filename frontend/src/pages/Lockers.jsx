@@ -3,18 +3,38 @@ import api from "../api/api";
 import DashboardLayout from "../layout/DashboardLayout";
 import { useParams, useNavigate } from "react-router-dom";
 import Pagination from "../components/Pagination";
+import { LockersGridSkeleton } from "../components/SkeletonLoader";
+import { getCachedData, setCachedData } from "../utils/cache";
 
 export default function Lockers() {
   const { branchId } = useParams();
   const navigate = useNavigate();
   const [lockers, setLockers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
   useEffect(() => {
-    api.get(`/lockers/branch/${branchId}`).then((res) => setLockers(res.data));
+    setIsLoading(true);
+
+    // Check cache first
+    const cacheKey = `lockers-${branchId}`;
+    const cachedLockers = getCachedData(cacheKey);
+    if (cachedLockers) {
+      setLockers(cachedLockers);
+      setIsLoading(false);
+      return;
+    }
+
+    api
+      .get(`/lockers/branch/${branchId}`)
+      .then((res) => {
+        setLockers(res.data);
+        setCachedData(cacheKey, res.data);
+      })
+      .finally(() => setIsLoading(false));
   }, [branchId]);
 
   const uniqueTypes = useMemo(() => {
@@ -25,7 +45,10 @@ export default function Lockers() {
   const filteredLockers = useMemo(() => {
     return lockers.filter((locker) => {
       const matchesSearch =
-        locker.number.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+        locker.number
+          .toString()
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         locker.type.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesFilter = filterType === "all" || locker.type === filterType;
       return matchesSearch && matchesFilter;
@@ -154,7 +177,9 @@ export default function Lockers() {
         </div>
 
         {/* Lockers Grid */}
-        {paginatedLockers.length === 0 ? (
+        {isLoading ? (
+          <LockersGridSkeleton count={20} />
+        ) : paginatedLockers.length === 0 ? (
           <div className="text-center py-8 sm:py-12 bg-white rounded-lg shadow-sm border border-gray-200">
             <svg
               className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mb-3 sm:mb-4"
