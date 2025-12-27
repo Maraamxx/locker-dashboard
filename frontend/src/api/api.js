@@ -1,7 +1,8 @@
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_BACKEND_URL ?? '/api';
 const api = axios.create({
-  baseURL: "https://locker-dashboard-production.up.railway.app", // your backend
+  baseURL, // uses env var in dev or relative '/api' in production
 });
 
 // Add token automatically
