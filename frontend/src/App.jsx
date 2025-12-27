@@ -11,7 +11,7 @@ import Branches from "./pages/Branches";
 import Lockers from "./pages/Lockers";
 import LockerDetails from "./pages/LockerDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
-// const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export { BACKEND_URL };
 function AppRoutes() {
